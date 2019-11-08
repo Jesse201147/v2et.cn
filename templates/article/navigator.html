@@ -1,0 +1,95 @@
+<!-- 栏目导航 -->
+<div class="d-flex bd-highlight mb-3">
+<div class="mr-auto p-2 bd-highlight">
+        <a class="
+                btn
+                btn-sm
+                mr-1
+                hvr-pop
+                {% if column_id == None %}
+                btn-success
+                {% else %}
+                btn-outline-success
+                {% endif %}
+             "
+       href="{% url 'article:article_list' %}"
+       role="button"
+    >
+        综合
+    </a>
+    {% for column in columns %}
+        <a class="
+                btn
+                btn-sm
+                mr-1
+                hvr-pop
+                {% if column.id == column_id %}
+                    {% if column.title == 'Python' %}
+                        btn-danger
+                    {% elif column.title == 'Linux' %}
+                        btn-warning
+                    {% elif column.title == '其他' %}
+                        btn-dark
+                    {% elif column.title == '爬虫' %}
+                        btn-info
+                    {% elif column.title == 'Coding' %}
+                        btn-success
+                    {% else %}
+                        btn-secondary
+                    {% endif %}
+                {% else %}
+                    btn-outline-secondary
+                {% endif %}
+                "
+           href="?column_id={{ column.id }}"
+           role="button"
+        >
+            {{ column.title }}
+        </a>
+    {% endfor %}
+</div>
+    <div class="p-2 bd-highlight">
+        <form class="form-inline">
+        <label class="sr-only">content</label>
+        <label>
+            <input type="text" class="form-control mb-sm-auto" name="search" placeholder="搜索文章..."
+                   required>
+        </label>
+    </form>
+    </div>
+</div>
+
+<!-- 面包屑 -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" style="background-color: white; padding: 0 0 0 2px; font-size: 0.9em">
+        <li class="breadcrumb-item"
+        >
+            {% if order == 'total_views' %}
+                <a href="?order=created-time&column_id={{ column_id }}&tag={{ tag }}"
+                   style="color: #2F33AB;"
+                   class="no-underline hvr-grow-rotate"
+                >
+                    最近
+                </a>
+            {% else %}
+                <span style="color: dimgray">最近</span>
+            {% endif %}
+        </li>
+        <li class="breadcrumb-item
+                  {% if order != 'total_views' %}
+                  {% endif %}
+                  "
+        >
+            {% if order != 'total_views' %}
+                <a href="?order=total_views&column_id={{ column_id }}&tag={{ tag }}"
+                   style="color: #2F33AB;"
+                   class="no-underline hvr-grow-rotate"
+                >
+                    热门
+                </a>
+            {% else %}
+                <span style="color: dimgray">热门</span>
+            {% endif %}
+        </li>
+    </ol>
+</nav>

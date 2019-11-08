@@ -1,0 +1,37 @@
+{% extends "nav/nav_base.html" %} {% load staticfiles %}
+{% block title %} 账号激活 {% endblock title %}
+{% block content %}
+    <div class="container">
+        <!-- BEGIN MAIN CONTENT -->
+        <section class="error-wrapper">
+            <h3>账号激活成功</h3>
+            <p class="page-404">
+                <span>页面将自动</span>
+                <a href="{% url 'nav:nav_home' %}">跳转到主页</a>
+                <span>等待时间：</span>
+                <span class="second">3</span>
+            </p>
+        </section>
+        <!-- END MAIN CONTENT -->
+    </div>
+    <meta http-equiv="refresh" content="3;url={% url 'nav:nav_home' %}" />
+    <script type="text/javascript">
+    $(function () {
+        var wait = $(".second").html();
+        timeOut();
+
+        /**
+         * 实现倒计时
+         */
+        function timeOut() {
+            if (wait != 0) {
+                setTimeout(function () {
+                    $('.second').text(--wait);
+                    timeOut();
+                }, 1000);
+            }
+        }
+    });
+    </script>
+
+{% endblock content %}

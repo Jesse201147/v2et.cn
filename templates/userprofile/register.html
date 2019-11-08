@@ -1,0 +1,60 @@
+{% extends "nav/nav_base.html" %} {% load staticfiles %}
+{% block title %} 账号注册 {% endblock title %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="container" style="height:0;padding-bottom:17%"></div>
+            <div class="col-lg-9" id="login_block">
+                <br>
+                <form method="post" action=".">
+                    {% csrf_token %}
+                    <!-- 账号 -->
+                    <div class="form-group col-md-4">
+                        <label for="username">昵称</label>
+                        <input type="text" class="form-control" id="username" name="username"
+                               onfocusout="check_name(this)"
+                               required>
+                        <small class="form-text text-muted m-sm-0"
+                               style="font-style: italic;color: mediumvioletred !important; visibility: hidden;">昵称已重复,请重新输入</small>
+                    </div>
+                    <!-- 邮箱 -->
+                    <div class="form-group col-md-4">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" id="email" name="email" onfocusout="check_em(this)"
+                               required>
+                        <small class="form-text text-muted m-sm-0"
+                               style="font-style: italic;color: mediumvioletred !important; visibility: hidden;">邮箱格式不正确</small>
+
+                    </div>
+                    <!-- 密码 -->
+                    <div class="form-group col-md-4">
+                        <label for="password">设置密码</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                               onfocusout="check_pw1(this)" required>
+                        <small class="form-text text-muted m-sm-0"
+                               style="font-style: italic;color: mediumvioletred !important; visibility: hidden;">密码不足6位</small>
+
+                    </div>
+                    <!-- 确认密码 -->
+                    <div class="form-group col-md-4">
+                        <label for="password2">确认密码</label>
+                        <input type="password" class="form-control" id="password2" name="password2"
+                               onfocusout="check_pw2(this)" required>
+                        <small class="form-text text-muted m-sm-0"
+                               style="font-style: italic;color: mediumvioletred !important; visibility: hidden;">两次输入密码不相同,请重输</small>
+
+                    </div>
+                    <!-- 提交按钮 -->
+                    <button id="submit" class="btn btn-primary disabled" disabled onclick="check_form()">提交</button>
+                    <small class="form-text text-muted m-sm-0" id="button_tip"
+                           style="font-style: italic;color: mediumvioletred !important; visibility: hidden;">表单数据有误</small>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        /* 这段代码起到了加速JS加载作用 */
+        document.write("<scr" + "ipt src=\"" + "{% static 'register.js' %}\"></sc" + "ript>");
+    </script>
+{% endblock content %}

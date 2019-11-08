@@ -1,0 +1,120 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+    文章页
+{% endblock title %}
+
+{% block content %}
+    <div class="">
+        <!-- 栏目导航 -->
+        {% include 'article/navigator.html' %}
+
+        <!-- 提示语 -->
+        {% if tag %}
+            <h5>
+                <i class="fas fa-search"></i>
+                标签 "<span style="color: red;">{{ tag }}</span>" 的相关文章如下：
+            </h5>
+        {% endif %}
+
+
+        <!-- 列表循环 -->
+        {% for article in articles %}
+            <div class="card mb-2 hvr-glow" style="display: flex">
+                <div class="row no-gutters align-items-center">
+                    {% if article.avatar_thumbnail %}
+                        <div class="col-4 d-none d-md-block"
+                             style="overflow: hidden"
+                        >
+                            <a href="{{ article.get_absolute_url }}">
+                                <img src="{{ article.avatar_thumbnail.url }}"
+                                     class="card-img hvr-grow"
+                                     style="transition-duration: 1s;"
+                                     alt="缩略图"
+                                >
+                            </a>
+                        </div>
+                    {% endif %}
+                    <div class="col">
+
+                        <div class="card-body">
+                            <!-- 标题 -->
+                            <h4 class="mt-0">
+                                <a href="{{ article.get_absolute_url }}"
+                                   style="font-weight: bold; color: black;"
+                                   class="hvr-forward no-underline"
+                                >
+                                    {{ article.title }}
+                                </a>
+                            </h4>
+
+                            <!-- 文章标题的栏目 -->
+                            <div class="mb-2 ">
+                                {% if article.column.id %}
+                                    <a href="?column_id={{ article.column.id }}"
+                                       role="button"
+                                       class="
+                                    btn
+                                    btn-sm
+                                    hvr-pop
+                                    {% if article.column.title == 'Python' %}
+                                    btn-outline-danger
+                                    {% elif article.column.title == 'Linux' %}
+                                    btn-outline-warning
+                                    {% elif article.column.title == '爬虫' %}
+                                    btn-outline-info
+                                    {% elif article.column.title == '其他' %}
+                                    btn-outline-dark
+                                    {% elif article.column.title == 'Coding' %}
+                                    btn-outline-success
+                                    {% endif %}
+                                    "
+                                    >
+                                        {{ article.column }}
+                                    </a>
+                                {% endif %}
+
+                                <!-- 标签 -->
+                                {% for tag in article.tags.all %}
+                                    <a class="badge badge-pill badge-light hvr-float-shadow"
+                                       href="?tag={{ tag }}"
+                                       style="color: grey;"
+                                    >
+                                        {{ tag }}</a>
+                                {% endfor %}
+                            </div>
+
+
+                            <!-- 附加信息 -->
+                            <p class="mb-0 text-monospace" style="color: grey;">
+                                <i class="fas fa-eye" style="color: lightskyblue;"></i>
+                                {{ article.total_views }}
+                                {#                                <i class="fas fa-heart" style="color: #FF6767;"></i>#}
+                                {#                                {{ article.likes }}#}
+                                {#                                <i class="fas fa-comments" style="color: yellowgreen;"></i>#}
+                                {#                                {{ article.comments.count }}#}
+                                <i class="fas fa-clock" style="color: pink;"></i>
+                                {{ article.created }}
+                                <!-- 教程 -->
+                                {% if article.course_id %}
+
+                                    <a href="{% url 'course:course_articles_list' article.course_id %}"
+                                       style="color: #8D8D8D;"
+                                       class="no-underline hvr-forward"
+                                    >
+                                        <i class="fas fa-book" style="color: #f0c674;"></i>
+                                        {{ article.course.title }}
+                                    </a>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% include 'article/paginator.html' %}
+    </div>
+{% endblock %}

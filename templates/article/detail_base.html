@@ -1,0 +1,276 @@
+{% load staticfiles %}
+{#{% load filter_utils %}#}
+
+<style>
+    div#article_body p img {
+        max-width: 95%;
+        box-shadow: 0 0 50px grey;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        border-radius: 20px;
+    }
+
+    div#article_body pre {
+        color: white;
+    }
+
+    div#article_body span.err {
+        color: white;
+    }
+
+    div#article_body h2 {
+        margin-top: 1.2em;
+        margin-bottom: 0.6em;
+        padding-bottom: 6px;
+        border-bottom: 1px solid lightgrey;
+    }
+
+    div#article_body h3 {
+        margin-top: 1em;
+        margin-bottom: 0.4em;
+    }
+
+    div#article_body blockquote p {
+        color: grey;
+        font-style: italic;
+        background-color: #f5f5f5;
+        padding: 10px;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+
+    .progress-indicator {
+        z-index: 100;
+    }
+</style>
+
+<div class="mt-4">
+    <div>
+        <div>
+            <h1>{{ article.title }}</h1>
+            <p class="text-muted">
+                {{ article.total_views }}阅读 ·
+                {{ article.comments.count }}评论 ·
+                {{ article.created|date:"Y/m/d" }}发布 &nbsp;
+                <a href="#Fcomments"
+                   style="color: cornflowerblue;
+                   "
+                   class="hvr-grow no-underline"
+                >
+                    前往评论
+                </a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'article:article_update' article.id %}" style="color: #00aaaa"
+                       class="hvr-grow no-underline">编辑</a>
+                {% endif %}
+            </p>
+        </div>
+        <div id="article_body">
+            {{ article.body|safe }}
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+{#    <div class="row justify-content-center">#}
+{#        <div class="col-lg-6 col-md-8 col btn-group btn-group-lg" role="group" aria-label="likes and appreciate">#}
+{#            <button class="btn btn-outline-danger hvr-icon-buzz-out animo_fireworks"#}
+{#                    type="button"#}
+{#                    onclick="animocons_handler(this, '{% url 'extends:increase_likes' 'article' article.id %}', {{ article.id }}, {{ article.likes }}, 'article')"#}
+{#            >#}
+{#                <span>点赞</span>#}
+{#                <span class="icobutton icobutton_{{ article.id }}">#}
+{#                    <i class="fas fa-heart hvr-icon"></i>#}
+{#                </span>#}
+{#                <span id="likes_{{ article.id }}"#}
+{#                      class="icobutton--heart"#}
+{#                      data-id="{{ article.id }}"#}
+{#                      data-type="article"#}
+{#                >#}
+{#                    {{ article.likes }}#}
+{#                </span>#}
+{#            </button>#}
+{#            <button class="btn btn-outline-success btn-sm hvr-icon-up"#}
+{#                    type="button"#}
+{#                    data-toggle="modal"#}
+{#                    data-target="#zanshang_modal"#}
+{#                    onclick="load_sponsor_list(); this.onclick=null;"#}
+{#            >打赏#}
+{#                <i class="fas fa-coffee hvr-icon"></i>#}
+{#            </button>#}
+{#        </div>#}
+{#    </div>#}
+
+{#    <br>#}
+{#    <div class="col" style="text-align: center" id="QR">#}
+{##}
+{#    </div>#}
+{#    <!-- zanshang_modal -->#}
+{#    <div class="modal fade" id="zanshang_modal" tabindex="-1" role="dialog"#}
+{#         aria-labelledby="zanshang_modal_title" aria-hidden="true">#}
+{#        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">#}
+{#            <div class="modal-content">#}
+{#                <div class="modal-header">#}
+{#                    <h5 class="modal-title" id="zanshang_modal_title">请博主喝杯咖啡</h5>#}
+{#                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#                        <span aria-hidden="true">&times;</span>#}
+{#                    </button>#}
+{#                </div>#}
+{#                <div class="modal-body">#}
+{#                    <div class="container-fluid">#}
+{#                        <div>#}
+{#                            <form action="{% url 'extends:payjs-qrpay' %}" method="post" target="_blank">#}
+{#                                {% csrf_token %}#}
+{#                                <div class="form-group">#}
+{#                                    <label for="total_fee">#}
+{#                                        <span style="font-weight: bold">金额<span style="color: red;">*</span>：</span>#}
+{#                                        <span style="color: darkorange; font-weight: bold; font-size: 2em;"#}
+{#                                              class="fee_number"#}
+{#                                        >8</span> 元#}
+{#                                    </label>#}
+{#                                    <input type="range" class="custom-range total_fee" id="total_fee" value="800"#}
+{#                                           name="total_fee"#}
+{#                                           min="100" max="5000" step="100">#}
+{#                                    <small>#}
+{#                                        <a onclick="random_amount()"#}
+{#                                           href="javascript:;"#}
+{#                                           class="no-underline hvr-grow text-muted"#}
+{#                                           style="float: right"#}
+{#                                        >试试手气</a>#}
+{#                                    </small>#}
+{##}
+{#                                </div>#}
+
+{#                                <div class="form-group">#}
+{#                                    <label for="username"#}
+{#                                            {% if user.is_authenticated %}#}
+{#                                           hidden#}
+{#                                            {% endif %}><span style="font-weight: bold">昵称：</span></label>#}
+{#                                    <input type="text" class="form-control sponsor-username" id="username"#}
+{#                                           name="username"#}
+{#                                           aria-describedby="username" placeholder="大侠尊姓大名？"#}
+{#                                           value="[游客]"#}
+{#                                            {% if user.is_authenticated %}#}
+{#                                           hidden#}
+{#                                            {% endif %}#}
+
+{#                                    >#}
+{#                                </div>#}
+{#                                <div class="form-group">#}
+{#                                    <label for="message"><span style="font-weight: bold">留言：</span></label>#}
+{#                                    <input type="text" class="form-control sponsor-message" id="message" name="message"#}
+{#                                           aria-describedby="message" placeholder="请少于70字哦"#}
+{#                                           value="赞赏博主"#}
+{#                                    >#}
+{#                                </div>#}
+{#                                <input type="text" hidden name="article_id" value="{{ article.id }}" title="">#}
+{#                                <br>#}
+{#                                <div style="text-align: center">#}
+{#                                    <button type="submit"#}
+{#                                            class="btn btn-warning text-white hvr-grow sponsor-submit"#}
+{#                                            onclick="close_modal()"#}
+{#                                    >#}
+{#                                        少废话，快给朕二维码！#}
+{#                                    </button>#}
+{#                                </div>#}
+{#                            </form>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="modal-body mt-4" style="text-align: center">#}
+{#                    <br>#}
+{#                    <br>#}
+{#                    <div style="font-weight: bold">#}
+{#                        <p>小站维护不易，创作高质量内容更是如此。</p>#}
+{#                        <p>千言万语，感谢你们的支持：</p>#}
+{#                    </div>#}
+{#                    <div style="text-align: center">#}
+{#                        <div class="spinner-border text-primary" role="status" id="part-sponsor-list">#}
+{#                            <span class="sr-only">Loading...</span>#}
+{#                        </div>#}
+{#                        <div class="container">#}
+{#                            <div class="row justify-content-center">#}
+{#                                <table class="table table-bordered mt-2" style="text-align: center;">#}
+{#                                    <thead class="thead-light">#}
+{#                                    <tr>#}
+{#                                        <th scope="col">赞赏者</th>#}
+{#                                        <th scope="col">金额</th>#}
+{#                                        <th scope="col">留言</th>#}
+{#                                        <th scope="col">时间</th>#}
+{#                                    </tr>#}
+{#                                    </thead>#}
+{#                                    <tbody id="sponsors-tbody">#}
+{#                                    </tbody>#}
+{#                                </table>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="col-12">#}
+{#        {% if pre_article %}#}
+{#            <a class="btn btn-sm hvr-bounce-to-right"#}
+{#               style="background-color: lightcyan; border-color: black;"#}
+{#               data-toggle="tooltip"#}
+{#               data-placement="top"#}
+{#               title="{{ pre_article.course_title }}"#}
+{#               href="{{ pre_article.get_absolute_url }}"#}
+{#            >#}
+{#                << 上一章#}
+{#            </a>#}
+{#        {% endif %}#}
+{#        {% if next_article %}#}
+{#            <a class="btn btn-sm hvr-bounce-to-left"#}
+{#               style="float: right; background-color: lightcyan;border-color: black;"#}
+{#               href="{{ next_article.get_absolute_url }}"#}
+{#               data-toggle="tooltip"#}
+{#               data-placement="top"#}
+{#               title="{{ next_article.course_title }}"#}
+{#            >#}
+{#                下一章 >>#}
+{#            </a>#}
+{#            <br>#}
+{#        {% endif %}#}
+{#    </div>#}
+{#    <!-- 知识产权署名 -->#}
+{#    {% include 'utils/license.html' %}#}
+{#    <div style="text-align: center;" class="aliyun_invite_b">#}
+{#        <a href="https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=m3bbolgr"#}
+{#           class="hvr-float-shadow"#}
+{#           id="aliyun_link"#}
+{#           target="_blank"#}
+{#        ></a>#}
+{#    </div>#}
+{#    <br>#}
+{#    <br>#}
+{#    <!-- 评论模块 -->#}
+{#    {% include 'comments/comment_module.html' %}#}
+</div>
+
+{% block script %}
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('div#QR').append('<img src="/static/img/QR.jpg" alt="" style="max-height: 300px; max-width: 80%;">');
+            $('div a#aliyun_link').append('<img src="/static/img/aliyun_invite_b.png" alt="" style="max-width: 100%; border-radius: 8px;">');
+
+            $('.aliyun_invite_b').on('mouseenter', function () {
+                this.index = layer.tips('本博客部署于阿里云<br/>此链接注册有折扣哦', this, {
+                    time: -1,
+                    maxWidth: 280,
+                    tips: [3, '#3369e8']
+                });
+            }).on('mouseleave', function () {
+                layer.close(this.index);
+            });
+        })
+    </script>
+    <script src="{% static 'progress_indicator/progress_indicator.js' %}"></script>
+    <script src="{% static 'sponsor_handler.js' %}"></script>
+    <script src="{% static 'animocons_likes.js' %}"></script>
+    <script src="{% static 'animo_fireworks.js' %}"></script>
+{% endblock %}

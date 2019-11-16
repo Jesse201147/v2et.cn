@@ -2,6 +2,8 @@
 .idea/
 collected_static/
 v2et/constant/
+*.key
+*.pem
 
 
 # Byte-compiled / optimized / DLL files

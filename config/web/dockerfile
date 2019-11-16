@@ -1,0 +1,14 @@
+FROM jesse201147/python3-django2
+
+ENV PYTHONUNBUFFERED 1
+
+# 添加MYSQL 连接器
+RUN apt-get update
+RUN apt-get install default-libmysqlclient-dev -y
+
+
+RUN mkdir /v2et
+
+WORKDIR /v2et
+
+ADD . /v2et/

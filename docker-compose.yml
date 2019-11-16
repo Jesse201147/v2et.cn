@@ -1,0 +1,47 @@
+version: "3"
+services:
+  app:
+    restart: always
+    build: config/web
+    
+    volumes:
+      - .:/v2et
+      - /tmp/logs:/tmp
+    command: bash start.sh
+    expose:
+      - "8000"
+    depends_on:
+      - mysqldb
+    links:
+      - mysqldb
+
+  mysqldb:
+    image: jesse201147/mysql8:latest
+    volumes:
+      - "/root/project/dockerfiles/mysql:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=v2et.cn
+      - MYSQL_DATABASE=v2et
+  
+  nginx:
+    build: config/nginx
+    restart: always
+    image: nginx:latest
+
+    ports:
+      - "80:80"
+      - "443:443"
+    expose:
+      - "8000"
+    volumes:
+      - ./collected_static:/usr/share/nginx/html/static
+      - ./media:/usr/share/nginx/html/media
+      - ./config/nginx/cert:/usr/share/nginx/ssl
+    depends_on:
+      - app
+    links:
+      - app
+

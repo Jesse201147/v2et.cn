@@ -4,7 +4,7 @@ collected_static/
 v2et/constant/
 *.key
 *.pem
-
+*.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

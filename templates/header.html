@@ -47,6 +47,8 @@
                         <a class="dropdown-item hvr-forward" href='{% url "userprofile:edit" user.id %}'>个人信息</a>
                         {% if user.is_superuser %}
                             <a class="dropdown-item hvr-forward" href="/admin">管理后台</a>
+                            <a class="dropdown-item hvr-forward" href="http://212.64.61.154:7890">frp后台</a>
+                            <a class="dropdown-item hvr-forward" href="http://212.64.61.154:7888">Jupyter</a>
                         {% endif %}
                         <a class="dropdown-item hvr-forward" href='{% url "userprofile:logout" %}'>退出登录</a>
                     </div>

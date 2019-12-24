@@ -8,4 +8,4 @@ from .models import ArticlePost
 class ArticlePostForm(forms.ModelForm):
     class Meta:
         model = ArticlePost
-        fields = ('title', 'body','tags','avatar')
+        fields = ('title', 'body','tags','avatar','secret')

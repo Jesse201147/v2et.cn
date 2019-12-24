@@ -76,8 +76,6 @@ def article_create(request):
             new_article.author = User.objects.get(id=request.user.id)
             if request.POST['column'] != 'none':
                 new_article.column = ArticleColumn.objects.get(id=request.POST['column'])
-            if new_article.column == '日志':
-                new_article.secret = 1
             new_article.save()
             article_post_form.save_m2m()
             return redirect('article:article_list')

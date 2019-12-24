@@ -30,6 +30,7 @@ class ArticlePost(models.Model):
     )
     tags = TaggableManager(blank=True)
     avatar = models.ImageField(upload_to='article/%Y%m%d', blank=True)
+    secret = models.IntegerField(max_length=2, default=0)
 
     def save(self, *args, **kwargs):
         article = super(ArticlePost, self).save(*args, **kwargs)

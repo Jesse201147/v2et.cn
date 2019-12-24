@@ -16,7 +16,10 @@ def article_list(request):
     order = request.GET.get('order')
     column_id = request.GET.get('column_id')
     tag = request.GET.get('tag','')
-    article_list = ArticlePost.objects.filter(secret=0)
+    if request.user.is_superuser:
+        article_list = ArticlePost.objects.all()
+    else:
+        article_list = ArticlePost.objects.filter(secret=0)
 
     if search:
         article_list = article_list.filter(
